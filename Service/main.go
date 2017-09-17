@@ -21,7 +21,7 @@ const (
 	PROJECT_ID = "prefab-atlas-180120"
 	BT_INSTANCE = "around-post"
 	// Needs to update this URL if you deploy it to cloud.
-	ES_URL = "http://54.201.64.226:9200"
+	ES_URL = "http://54.149.147.221:9200"
 )
 
 

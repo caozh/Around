@@ -8,9 +8,10 @@ import (
 	"log"
 	"strconv"
 	"reflect"
-	"context"
-	"cloud.google.com/go/bigtable"
+	//"context"
+	//"cloud.google.com/go/bigtable"
 	"github.com/pborman/uuid"
+	"strings"
 )
 
 const (
@@ -19,7 +20,7 @@ const (
 	DISTANCE = "200km"
 	// Needs to update
 	PROJECT_ID = "prefab-atlas-180120"
-	BT_INSTANCE = "around-post"
+	//BT_INSTANCE = "around-post"
 	// Needs to update this URL if you deploy it to cloud.
 	ES_URL = "http://54.149.147.221:9200"
 )
@@ -84,7 +85,6 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received one post request")
 	decoder := json.NewDecoder(r.Body)
 	var p Post
-
 	if err := decoder.Decode(&p); err != nil {
 		panic(err)
 		return
@@ -115,6 +115,8 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Post is saved to Index: %s\n", p.Message)
+	/*
+	// Google BigTable
 
 	ctx := context.Background()
 	// you must update project name here
@@ -138,7 +140,7 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Printf("Post is saved to BigTable: %s\n", p.Message)
-
+	 */
 }
 
 func handlerSearch(w http.ResponseWriter, r *http.Request) {
@@ -191,8 +193,9 @@ func handlerSearch(w http.ResponseWriter, r *http.Request) {
 		p := item.(Post) // p = (Post) item
 		fmt.Printf("Post by %s: %s at lat %v and lon %v\n", p.User, p.Message, p.Location.Lat, p.Location.Lon)
 		// TODO(student homework): Perform filtering based on keywords such as web spam etc.
-		ps = append(ps, p)
-
+		if strings.Contains(p.Message, "Ass") == false {
+			ps = append(ps, p)
+		}
 	}
 	js, err := json.Marshal(ps)
 	if err != nil {
